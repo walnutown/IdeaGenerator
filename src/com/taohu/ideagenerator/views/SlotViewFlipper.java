@@ -36,8 +36,8 @@ public class SlotViewFlipper extends ViewFlipper implements OnGestureListener {
 		mSpeed = 500;
 		mCount = 10;
 		isRolling = false;
-		this.values = values;
 		mDetector = new GestureDetector(this);
+		this.values = values;
 		for (String value : values)
 			addView(new SlotView(context, value));
 		rollUp = new Runnable() {
@@ -64,8 +64,13 @@ public class SlotViewFlipper extends ViewFlipper implements OnGestureListener {
 			}
 		};
 		
-		new Handler().postDelayed(rollDown, mSpeed);
+		//new Handler().postDelayed(rollDown, mSpeed);
 	}
+	
+	 @Override
+	    public boolean onTouchEvent(MotionEvent me) {
+	        return mDetector.onTouchEvent(me);
+	    }
 
 	// @Override
 	// public void showNext() {
@@ -78,16 +83,12 @@ public class SlotViewFlipper extends ViewFlipper implements OnGestureListener {
 	// super.showPrevious();
 	// }
 	
-	 @Override
-	    public boolean onTouchEvent(MotionEvent me) {
-	        return mDetector.onTouchEvent(me);
-	    }
 
 	@Override
 	public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
 		isRolling = true;
 		Log.d("Touch", "onFling()");
-		mCount = (int) Math.abs(velocityY);
+		mCount = (int) Math.abs(velocityY)/600;
 		if (velocityY > 0) {
 			new Handler().postDelayed(rollDown, mSpeed);
 		} else {
@@ -136,16 +137,11 @@ public class SlotViewFlipper extends ViewFlipper implements OnGestureListener {
 			showPrevious();
 	}
 
-	@Override
-	public boolean onDown(MotionEvent e) {
-		// TODO Auto-generated method stub
-		return false;
-	}
 
 	@Override
 	public void onShowPress(MotionEvent e) {
 		// TODO Auto-generated method stub
-
+		
 	}
 
 	@Override
@@ -163,7 +159,15 @@ public class SlotViewFlipper extends ViewFlipper implements OnGestureListener {
 	@Override
 	public void onLongPress(MotionEvent e) {
 		// TODO Auto-generated method stub
-
+		
 	}
 
+	@Override
+	public boolean onDown(MotionEvent e) {
+		// TODO Auto-generated method stub
+		Log.d("Touch", "onDown()");
+		return true;
+	}
+
+	
 }
