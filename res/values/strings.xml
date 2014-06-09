@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">IdeaGenerator</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="default_word">Unknown</string>
+     <string name="title_section1">Slot</string>
+    <string name="title_section2">History</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="action_example">Example action</string>
+    <string name="action_settings">Settings</string>
+
+    <string-array name="desires_array">
+        <item>好奇</item>
+        <item>美食</item>
+        <item>荣誉</item>
+        <item>尊严</item>
+        <item>性</item>
+        <item>秩序</item>
+        <item>效率</item>
+        <item>安全</item>
+        <item>刺激</item>
+        <item>力量</item>
+        <item>占有</item>
+        <item>权力</item>
+        <item>窥视</item>
+        <item>懒惰</item>
+        <item>自由</item>
+        <item>美丽</item>
+    </string-array>
+    <string-array name="industries_array">
+        <item>农林牧渔</item>
+        <item>医药卫生</item>
+        <item>建筑建材</item>
+        <item>冶金矿产</item>
+        <item>石油化工</item>
+        <item>水利水电</item>
+        <item>交通运输</item>
+        <item>信息通信</item>
+        <item>机械机电</item>
+        <item>服装纺织</item>
+        <item>安全防护</item>
+        <item>旅游休闲</item>
+        <item>办公文教</item>
+        <item>玩具礼品</item>
+        <item>家居用品</item>
+        <item>包装</item>
+        <item>体育</item>
+        <item>办公</item>
+        <item>新闻出版</item>
+        <item>电视电影</item>
+        <item>音乐</item>
+        <item>金融</item>
+        <item>教育</item>
+        <item>酒店旅游</item>
+        <item>广告营销</item>
+        <item>批发零售</item>       
+    </string-array>
+     <string-array name="techs_array">
+        <item>网络</item>
+        <item>手机</item>
+        <item>图形</item>
+        <item>信息安全</item>
+        <item>数据分析</item>
+        <item>分布式</item>
+        <item>人机交互</item>
+        <item>多媒体</item>
+        <item>机器人</item>
+        <item>语音</item>
+        <item>人脸识别</item>
+        <item>指纹识别</item>
+        <item>手势</item>
+        <item>云存储</item>
+        <item>仿真</item>
+        <item>机器学习</item>
+        <item>搜索</item>
+        <item>人工智能</item>
+    </string-array>
+
+</resources>
