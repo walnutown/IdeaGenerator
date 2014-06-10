@@ -2,11 +2,14 @@ package com.taohu.ideagenerator.views;
 
 import android.content.Context;
 import android.os.Handler;
+import android.support.v4.view.ViewConfigurationCompat;
+import android.support.v7.appcompat.R;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.GestureDetector.OnGestureListener;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
+import android.view.ViewConfiguration;
 import android.view.animation.AccelerateInterpolator;
 import android.view.animation.Animation;
 import android.view.animation.TranslateAnimation;
@@ -14,7 +17,8 @@ import android.widget.ViewFlipper;
 
 public class SlotViewFlipper extends ViewFlipper implements OnGestureListener {
 	String[] values;
-	private int mSpeed;
+	private int mDuration;
+	private int mDelt;
 	private int mCount;
 	private boolean isRolling;
 	private Runnable rollUp;
@@ -33,7 +37,8 @@ public class SlotViewFlipper extends ViewFlipper implements OnGestureListener {
 	}
 
 	public void init(String[] values) {
-		mSpeed = 500;
+		mDuration = 0;
+		mDelt = 10;
 		mCount = 10;
 		isRolling = false;
 		mDetector = new GestureDetector(this);
@@ -48,7 +53,7 @@ public class SlotViewFlipper extends ViewFlipper implements OnGestureListener {
 					isRolling = false;
 					return;
 				}
-				new Handler().postDelayed(rollUp, mSpeed);
+				new Handler().postDelayed(rollUp, mDuration);
 			}
 		};
 		rollDown = new Runnable() {
@@ -60,54 +65,52 @@ public class SlotViewFlipper extends ViewFlipper implements OnGestureListener {
 					isRolling = false;
 					return;
 				}
-				new Handler().postDelayed(rollDown, mSpeed);
+				new Handler().postDelayed(rollDown, mDuration);
 			}
 		};
-		
-		//new Handler().postDelayed(rollDown, mSpeed);
 	}
-	
-	 @Override
-	    public boolean onTouchEvent(MotionEvent me) {
-	        return mDetector.onTouchEvent(me);
-	    }
 
-	// @Override
-	// public void showNext() {
-	// // TODO Auto-generated method stub
-	// super.showNext();
-	// }
-	// @Override
-	// public void showPrevious() {
-	// // TODO Auto-generated method stub
-	// super.showPrevious();
-	// }
-	
+	@Override
+	public boolean onTouchEvent(MotionEvent me) {
+		return mDetector.onTouchEvent(me);
+	}
 
 	@Override
 	public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
+		if (isRolling)
+			return true;
 		isRolling = true;
 		Log.d("Touch", "onFling()");
-		mCount = (int) Math.abs(velocityY)/600;
+		float maxVelocity = ViewConfiguration.get(context).getScaledMaximumFlingVelocity() / 2;
+		float normalizedVelocityY = velocityY / maxVelocity;
+		Log.d("Touch", "velocityY " + velocityY + "maxValocity " + maxVelocity + "normalizedVelocity "
+				+ normalizedVelocityY);
+		mDuration = 0;
+		mCount = (int) Math.abs(normalizedVelocityY * 10);
+		if (mCount==0)
+			mCount=1;
+		mDelt = 600 / mCount;
 		if (velocityY > 0) {
-			new Handler().postDelayed(rollDown, mSpeed);
+			rollDown.run();
 		} else {
-			new Handler().postDelayed(rollUp, mSpeed);
+			rollUp.run();
 		}
 		return true;
 	}
 
 	private void up() {
+		Log.d("Touch", "up() " + getDisplayedChild());
 		mCount--;
+		mDuration += mDelt;
 		Animation inFromBottom = new TranslateAnimation(Animation.RELATIVE_TO_PARENT, 0.0f,
 				Animation.RELATIVE_TO_PARENT, 0.0f, Animation.RELATIVE_TO_PARENT, 1.0f, Animation.RELATIVE_TO_PARENT,
 				0.0f);
 		inFromBottom.setInterpolator(new AccelerateInterpolator());
-		inFromBottom.setDuration(mSpeed);
+		inFromBottom.setDuration(mDuration);
 		Animation outToTop = new TranslateAnimation(Animation.RELATIVE_TO_PARENT, 0.0f, Animation.RELATIVE_TO_PARENT,
 				0.0f, Animation.RELATIVE_TO_PARENT, 0.0f, Animation.RELATIVE_TO_PARENT, -1.0f);
 		outToTop.setInterpolator(new AccelerateInterpolator());
-		outToTop.setDuration(mSpeed);
+		outToTop.setDuration(mDuration);
 		clearAnimation();
 		setInAnimation(inFromBottom);
 		setOutAnimation(outToTop);
@@ -118,36 +121,52 @@ public class SlotViewFlipper extends ViewFlipper implements OnGestureListener {
 	}
 
 	private void down() {
+		Log.d("Touch", "down() " + getDisplayedChild());
 		mCount--;
+		mDuration += mDelt;
 		Animation outToBottom = new TranslateAnimation(Animation.RELATIVE_TO_PARENT, 0.0f,
 				Animation.RELATIVE_TO_PARENT, 0.0f, Animation.RELATIVE_TO_PARENT, 0.0f, Animation.RELATIVE_TO_PARENT,
 				1.0f);
 		outToBottom.setInterpolator(new AccelerateInterpolator());
-		outToBottom.setDuration(mSpeed);
+		outToBottom.setDuration(mDuration);
 		Animation inFromTop = new TranslateAnimation(Animation.RELATIVE_TO_PARENT, 0.0f, Animation.RELATIVE_TO_PARENT,
 				0.0f, Animation.RELATIVE_TO_PARENT, -1.0f, Animation.RELATIVE_TO_PARENT, 0.0f);
 		inFromTop.setInterpolator(new AccelerateInterpolator());
-		inFromTop.setDuration(mSpeed);
+		inFromTop.setDuration(mDuration);
 		clearAnimation();
 		setInAnimation(inFromTop);
 		setOutAnimation(outToBottom);
-		if (getDisplayedChild() == 0)
-			setDisplayedChild(values.length - 1);
+		if (getDisplayedChild() == values.length - 1)
+			setDisplayedChild(0);
 		else
-			showPrevious();
+			showNext();
 	}
-
 
 	@Override
 	public void onShowPress(MotionEvent e) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public boolean onSingleTapUp(MotionEvent e) {
-		// TODO Auto-generated method stub
-		return false;
+		Log.d("Touch", "onSingleTabUp()");
+		Log.d("Touch", "isRolling " + isRolling);
+		if (isRolling){
+			if (isFlipping()){
+				stopFlipping();
+				isRolling = false;
+				return true;
+			}
+			return true;
+		}
+		isRolling = true;
+		clearAnimation();
+		setInAnimation(null);
+		setOutAnimation(null);
+		setFlipInterval(100);
+		startFlipping();
+		return true;
 	}
 
 	@Override
@@ -159,7 +178,7 @@ public class SlotViewFlipper extends ViewFlipper implements OnGestureListener {
 	@Override
 	public void onLongPress(MotionEvent e) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
@@ -169,5 +188,4 @@ public class SlotViewFlipper extends ViewFlipper implements OnGestureListener {
 		return true;
 	}
 
-	
 }
