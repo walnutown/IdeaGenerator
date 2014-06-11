@@ -19,32 +19,51 @@ import com.taohu.ideagenerator.model.Combination;
 import com.taohu.ideagenerator.utils.AppSettings;
 import com.taohu.ideagenerator.utils.FileManager;
 import com.taohu.ideagenerator.utils.JSONManager;
+import com.taohu.ideagenerator.utils.SwipeDismissListViewTouchListener;
 import com.taohu.ideagenerator.views.SavedCombinationView;
 
 public class SavedFragment extends Fragment {
 
-	private ListView savedCombinations;
+	private ListView listView;
+	private SavedCombinationsAdapter mAdapter;
 	private final static int HISTORY = 2;
 	private FileManager fileManager;
+	private List<Combination> list;
 
 	public SavedFragment() {
-		fileManager = FileManager.getInstance();
-	}
-
-	@Override
-	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-		View rootView = null;
+		String json_str = null;
 		try {
-			rootView = inflater.inflate(R.layout.fragment_saved, container, false);
-			savedCombinations = (ListView) rootView.findViewById(R.id.listview);
-			String json_str = fileManager.read(AppSettings.HISTORY_FILE);
-			List<Combination> combinations = JSONManager.getCombinationsFromJSON(new JSONArray(json_str));
-			savedCombinations.setAdapter(new SavedCombinationsAdapter(combinations));
+			fileManager = FileManager.getInstance();
+			json_str = fileManager.read(AppSettings.HISTORY_FILE);
+			list = JSONManager.getCombinationsFromJSON(new JSONArray(json_str));
 		} catch (IOException e) {
 			e.printStackTrace();
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
+
+	}
+
+	@Override
+	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+		View rootView = null;
+		rootView = inflater.inflate(R.layout.fragment_saved, container, false);
+		listView = (ListView) rootView.findViewById(R.id.listview);
+		mAdapter = new SavedCombinationsAdapter(list);
+		listView.setAdapter(mAdapter);
+		SwipeDismissListViewTouchListener touchListener = new SwipeDismissListViewTouchListener(listView, new SwipeDismissListViewTouchListener.OnDismissCallback() {
+			
+			@Override
+			public void onDismiss(ListView listView, int[] reverseSortedPositions) {
+				 for (int position : reverseSortedPositions) {
+                     mAdapter.remove(position);
+                 }
+                 mAdapter.notifyDataSetChanged();
+				
+			}
+		});
+		listView.setOnTouchListener(touchListener);
+		listView.setOnScrollListener(touchListener.makeScrollListener());
 		return rootView;
 	}
 
@@ -52,6 +71,21 @@ public class SavedFragment extends Fragment {
 	public void onAttach(Activity activity) {
 		super.onAttach(activity);
 		((MainActivity) activity).onSectionAttached(HISTORY);
+	}
+
+	@Override
+	public void onPause() {
+		super.onPause();
+		try {
+			JSONArray json_combinations = new JSONArray();
+			for (Combination combination : list)
+				json_combinations.put(JSONManager.getJSON(combination));
+			fileManager.write(json_combinations.toString(), AppSettings.HISTORY_FILE);
+		} catch (JSONException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 
 	private class SavedCombinationsAdapter extends BaseAdapter {
@@ -70,6 +104,10 @@ public class SavedFragment extends Fragment {
 		public Object getItem(int position) {
 			return combinations.get(position);
 		}
+		
+		public void remove(int position){
+			combinations.remove(position);
+		}
 
 		@Override
 		public long getItemId(int position) {
@@ -78,11 +116,12 @@ public class SavedFragment extends Fragment {
 
 		@Override
 		public View getView(int position, View convertView, ViewGroup parent) {
-			SavedCombinationView view = (SavedCombinationView) convertView;
-			if (view == null)
-				view = new SavedCombinationView(getActivity());
-			view.resetView((Combination) getItem(position));
-			return view;
+			SavedCombinationView scview = (SavedCombinationView) convertView;
+			if (scview == null) {
+				scview = new SavedCombinationView(getActivity());
+			}
+			scview.resetView((Combination) getItem(position));
+			return scview;
 		}
 
 	}

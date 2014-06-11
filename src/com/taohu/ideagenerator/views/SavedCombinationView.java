@@ -19,7 +19,7 @@ public class SavedCombinationView extends LinearLayout {
 		super(context);
 		LayoutInflater.from(context).inflate(R.layout.view_savedcombination, this, true);
 	}
-
+	
 	public void resetView(Combination combination){	
 		txtDesire = (TextView) findViewById(R.id.txt_desire);
 		txtIndustry = (TextView) findViewById(R.id.txt_industry);
