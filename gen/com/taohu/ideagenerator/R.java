@@ -1106,12 +1106,13 @@ containing a value of this type.
         public static final int abc_textfield_searchview_right_holo_light=0x7f020056;
         public static final int actionbar_background=0x7f020057;
         public static final int drawer_shadow=0x7f020058;
-        public static final int ic_action_picture=0x7f020059;
-        public static final int ic_action_save=0x7f02005a;
-        public static final int ic_action_share=0x7f02005b;
-        public static final int ic_drawer=0x7f02005c;
-        public static final int ic_launcher=0x7f02005d;
-        public static final int logo=0x7f02005e;
+        public static final int ic_action_discard=0x7f020059;
+        public static final int ic_action_picture=0x7f02005a;
+        public static final int ic_action_save=0x7f02005b;
+        public static final int ic_action_share=0x7f02005c;
+        public static final int ic_drawer=0x7f02005d;
+        public static final int ic_launcher=0x7f02005e;
+        public static final int logo=0x7f02005f;
     }
     public static final class id {
         public static final int action_bar=0x7f05001c;
@@ -1125,8 +1126,8 @@ containing a value of this type.
         public static final int action_menu_divider=0x7f050016;
         public static final int action_menu_presenter=0x7f050017;
         public static final int action_mode_close_button=0x7f050024;
-        public static final int action_save=0x7f05004a;
-        public static final int action_share=0x7f05004b;
+        public static final int action_save=0x7f05004b;
+        public static final int action_share=0x7f05004a;
         public static final int activity_chooser_view_content=0x7f050025;
         public static final int always=0x7f05000b;
         public static final int beginning=0x7f050011;
@@ -1251,8 +1252,8 @@ containing a value of this type.
         public static final int view_slot=0x7f03001f;
     }
     public static final class menu {
-        public static final int global=0x7f0d0000;
-        public static final int main=0x7f0d0001;
+        public static final int main=0x7f0d0000;
+        public static final int saved=0x7f0d0001;
     }
     public static final class string {
         /**  Content description for the action bar "home" affordance. [CHAR LIMIT=NONE] 
