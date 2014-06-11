@@ -1,13 +1,27 @@
 package com.taohu.ideagenerator;
 
+import java.io.IOException;
+import java.util.List;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
+import android.text.format.Time;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
+
+import com.taohu.ideagenerator.model.Combination;
+import com.taohu.ideagenerator.model.Item;
+import com.taohu.ideagenerator.utils.AppSettings;
+import com.taohu.ideagenerator.utils.FileManager;
+import com.taohu.ideagenerator.utils.JSONManager;
 
 public class MainActivity extends ActionBarActivity implements NavigationDrawerFragment.NavigationDrawerCallbacks {
 
@@ -22,6 +36,8 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerF
 	 * {@link #restoreActionBar()}.
 	 */
 	private CharSequence mTitle;
+	private Fragment currentFragment;
+	private FileManager fileManager;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -34,21 +50,22 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerF
 
 		// Set up the drawer.
 		mNavigationDrawerFragment.setUp(R.id.navigation_drawer, (DrawerLayout) findViewById(R.id.drawer_layout));
+
+		fileManager = FileManager.createInstance(getApplicationContext());
 	}
 
 	@Override
 	public void onNavigationDrawerItemSelected(int position) {
 		// update the main content by replacing fragments
 		FragmentManager fragmentManager = getSupportFragmentManager();
-		Fragment fragment = null;
 		switch (position) {
 		case 0:
-			fragment = new MainFragment();
+			currentFragment = new MainFragment();
 			break;
 		case 1:
-			fragment = new HistoryFragment();
+			currentFragment = new SavedFragment();
 		}
-		fragmentManager.beginTransaction().replace(R.id.container, fragment).commit();
+		fragmentManager.beginTransaction().replace(R.id.container, currentFragment).commit();
 	}
 
 	public void onSectionAttached(int number) {
@@ -87,10 +104,35 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerF
 		// Handle action bar item clicks here. The action bar will
 		// automatically handle clicks on the Home/Up button, so long
 		// as you specify a parent activity in AndroidManifest.xml.
-		int id = item.getItemId();
-		if (id == R.id.action_settings) {
-			return true;
+		try {
+			int id = item.getItemId();
+			if (id == R.id.action_save) {
+				saveCombination();
+				Toast.makeText(getApplicationContext(), "Saved", Toast.LENGTH_SHORT).show();
+				return true;
+			}
+		} catch (JSONException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
 		}
+
 		return super.onOptionsItemSelected(item);
+	}
+
+	private void saveCombination() throws JSONException, IOException {
+		Time currTime = new Time();
+		currTime.setToNow();
+		Combination combination = new Combination(currTime.format3339(true));
+		List<Item> items = ((MainFragment) currentFragment).getCurrentItems();
+		for (Item item : items)
+			combination.addItem(item);
+		JSONArray json_combinations = null;
+		if (!fileManager.has(AppSettings.HISTORY_FILE)) {
+			json_combinations = new JSONArray();
+		} else
+			json_combinations = new JSONArray(fileManager.read(AppSettings.HISTORY_FILE));
+		json_combinations.put(JSONManager.getJSON(combination));
+		fileManager.write(json_combinations.toString(), AppSettings.HISTORY_FILE);
 	}
 }

@@ -3,6 +3,7 @@ package com.taohu.ideagenerator.views;
 import java.util.Random;
 
 import android.content.Context;
+import android.graphics.drawable.ColorDrawable;
 import android.view.LayoutInflater;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -36,11 +37,13 @@ public class SlotView extends LinearLayout {
 		createView(context, str);
 	}
 
+	@SuppressWarnings("deprecation")
 	private void createView(Context context, String str) {
 		LayoutInflater.from(context).inflate(R.layout.view_slot, this, true);
 		label = (TextView) findViewById(R.id.text);
 		label.setText(str);
-		label.setBackgroundColor(getRandomColor());
+		ColorDrawable cd = new ColorDrawable(getRandomColor());
+		label.setBackgroundDrawable(cd);
 	}
 
 	private int getRandomColor() {
