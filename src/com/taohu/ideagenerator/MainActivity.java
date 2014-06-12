@@ -6,12 +6,15 @@ import java.util.List;
 import org.json.JSONArray;
 import org.json.JSONException;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
+import android.support.v7.widget.ShareActionProvider;
 import android.text.format.Time;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -92,14 +95,23 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerF
 			// Only show items in the action bar relevant to this screen
 			// if the drawer is not showing. Otherwise, let the drawer
 			// decide what to show in the action bar.
-			if (currentFragment instanceof MainFragment)
+			if (currentFragment instanceof MainFragment){
 				getMenuInflater().inflate(R.menu.main, menu);
-			else
+				MenuItem shareItem = menu.findItem(R.id.action_share);
+				ShareActionProvider mShareActionProvider = (ShareActionProvider) MenuItemCompat.getActionProvider(shareItem);
+				mShareActionProvider.setShareIntent(getDefaultIntent());
+			}else
 				getMenuInflater().inflate(R.menu.saved, menu);
 			restoreActionBar();	
 			return true;
 		}
 		return super.onCreateOptionsMenu(menu);
+	}
+	
+	private Intent getDefaultIntent() {
+	    Intent intent = new Intent(Intent.ACTION_SEND);
+	    intent.setType("image/*");
+	    return intent;
 	}
 
 	@Override

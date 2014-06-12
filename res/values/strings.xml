@@ -4,7 +4,7 @@
     <string name="app_name">IdeaGenerator</string>
     <string name="hello_world">Hello world!</string>
     <string name="default_word">Unknown</string>
-     <string name="title_section1">Generate</string>
+     <string name="title_section1">Play</string>
     <string name="title_section2">Saved</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>

@@ -1110,9 +1110,12 @@ containing a value of this type.
         public static final int ic_action_picture=0x7f02005a;
         public static final int ic_action_save=0x7f02005b;
         public static final int ic_action_share=0x7f02005c;
-        public static final int ic_drawer=0x7f02005d;
-        public static final int ic_launcher=0x7f02005e;
-        public static final int logo=0x7f02005f;
+        public static final int ic_action_share_bg=0x7f02005d;
+        public static final int ic_action_share_bg_default=0x7f02005e;
+        public static final int ic_action_share_bg_pressed=0x7f02005f;
+        public static final int ic_drawer=0x7f020060;
+        public static final int ic_launcher=0x7f020061;
+        public static final int idea_logo=0x7f020062;
     }
     public static final class id {
         public static final int action_bar=0x7f05001c;
@@ -1248,8 +1251,9 @@ containing a value of this type.
         public static final int fragment_saved=0x7f03001b;
         public static final int navigation_drawer_menu_item=0x7f03001c;
         public static final int support_simple_spinner_dropdown_item=0x7f03001d;
-        public static final int view_savedcombination=0x7f03001e;
-        public static final int view_slot=0x7f03001f;
+        public static final int view_actionshare=0x7f03001e;
+        public static final int view_savedcombination=0x7f03001f;
+        public static final int view_slot=0x7f030020;
     }
     public static final class menu {
         public static final int main=0x7f0d0000;

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <color name="blue_main">#1dc6ff</color>
+    <color name="blue_main">#0881C2</color>
     
     <color name="blue">#33B5E5</color>
     <color name="blue_dark">#0099CC</color>
