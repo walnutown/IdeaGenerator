@@ -19,5 +19,9 @@ public class Combination {
 	public List<Item> getItems() {
 		return items;
 	}
+	
+	public String toString(){
+		return items.toString();
+	}
 
 }

@@ -9,4 +9,8 @@ public class Item {
 		this.color = color;
 		this.value = value;
 	}
+	
+	public String toString(){
+		return value+"";
+	}
 }

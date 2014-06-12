@@ -9,6 +9,7 @@ import org.json.JSONException;
 import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -31,9 +32,13 @@ public class SavedFragment extends Fragment {
 	private List<Combination> list;
 
 	public SavedFragment() {
+		fileManager = FileManager.getInstance();
+	} 
+
+	@Override
+	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		String json_str = null;
 		try {
-			fileManager = FileManager.getInstance();
 			json_str = fileManager.read(AppSettings.HISTORY_FILE);
 			list = JSONManager.getCombinationsFromJSON(new JSONArray(json_str));
 		} catch (IOException e) {
@@ -41,15 +46,11 @@ public class SavedFragment extends Fragment {
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
-
-	}
-
-	@Override
-	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+		
 		View rootView = null;
 		rootView = inflater.inflate(R.layout.fragment_saved, container, false);
 		listView = (ListView) rootView.findViewById(R.id.listview);
-		mAdapter = new SavedCombinationsAdapter(list);
+		mAdapter = new SavedCombinationsAdapter();
 		listView.setAdapter(mAdapter);
 		SwipeDismissListViewTouchListener touchListener = new SwipeDismissListViewTouchListener(listView, new SwipeDismissListViewTouchListener.OnDismissCallback() {
 			
@@ -72,6 +73,13 @@ public class SavedFragment extends Fragment {
 		super.onAttach(activity);
 		((MainActivity) activity).onSectionAttached(HISTORY);
 	}
+	
+	
+
+	@Override
+	public void onResume() {
+		super.onResume();
+	}
 
 	@Override
 	public void onPause() {
@@ -89,24 +97,23 @@ public class SavedFragment extends Fragment {
 	}
 
 	private class SavedCombinationsAdapter extends BaseAdapter {
-		List<Combination> combinations;
 
-		public SavedCombinationsAdapter(List<Combination> combinations) {
-			this.combinations = combinations;
+		public SavedCombinationsAdapter() {
 		}
 
 		@Override
 		public int getCount() {
-			return combinations.size();
+			return list.size();
 		}
 
 		@Override
 		public Object getItem(int position) {
-			return combinations.get(position);
+			return list.get(position);
 		}
 		
 		public void remove(int position){
-			combinations.remove(position);
+			list.remove(position);
+			
 		}
 
 		@Override
